@@ -34,7 +34,7 @@ function Register() {
       setLoading(false);
       return;
     }
-const API_URL = "http://aiuodate-production.up.railway.app"
+const API_URL = "https://aiuodate-production.up.railway.app"
     try {
       const { confirmPassword, ...submitData } = formData;
       
