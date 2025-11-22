@@ -18,7 +18,7 @@ function Login() {
     setError('');
     setLoading(true);
 
-    const API_URL =" http://localhost:5001"
+    const API_URL = "http://aiuodate-production.up.railway.app"
 
     try {
       const response = await axios.post(`${API_URL}/api/users/login`, formData, {

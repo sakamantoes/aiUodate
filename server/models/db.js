@@ -3,15 +3,14 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME || 'health_app',
-  process.env.DB_USER || 'root',
-  process.env.DB_PASSWORD || '',
-  {
-    host: process.env.DB_HOST || 'localhost',
-    dialect: 'mysql',
-    logging: false
+// Use the Railway URL directly in your code (not recommended for production)
+// But for quick testing, you can do this:
+const sequelize = new Sequelize('mysql://root:wQtCcaktohbehNDffpsYFezGLqeJlUEq@mysql.railway.internal:3306/railway', {
+  dialect: 'mysql',
+  logging: false,
+  dialectOptions: {
+    connectTimeout: 60000
   }
-);
+});
 
 export default sequelize;
