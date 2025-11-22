@@ -61,28 +61,247 @@ export async function sendMedicationReminder(user, medication) {
     const message = getRandomMessage();
     
     const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: user.email,
-      subject: `💊 Medication Reminder: Time for ${medication.name}`,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; ">
-          <h2 style="color: #2563eb;">Medication Reminder</h2>
-          <div style="background: #f3f4f6; padding: 20px; border-radius: 8px;">
-            <h3>Hello ${user.name},</h3>
-            <p>It's time to take your medication:</p>
-            <div style="background: white; padding: 15px; border-radius: 5px; margin: 10px 0;">
-              <strong>${medication.name}</strong><br/>
-              Dosage: ${medication.dosage}<br/>
-              Frequency: ${medication.frequency}
-            </div>
-            <p style="color: #666; font-style: italic;">${message.replace(/\n/g, '<br/>')}</p>
+  from: process.env.EMAIL_USER,
+  to: user.email,
+  subject: `💊 Medication Reminder: Time for ${medication.name}`,
+  html: `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        
+        body {
+          font-family: 'Inter', Arial, sans-serif;
+          line-height: 1.6;
+          color: #374151;
+          background-color: #f8fafc;
+          margin: 0;
+          padding: 20px;
+        }
+        
+        .container {
+          max-width: 600px;
+          margin: 0 auto;
+          background: white;
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+          border: 1px solid #e5e7eb;
+        }
+        
+        .header {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          padding: 30px;
+          text-align: center;
+          color: white;
+        }
+        
+        .header h1 {
+          font-size: 28px;
+          font-weight: 700;
+          margin-bottom: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+        }
+        
+        .header p {
+          font-size: 16px;
+          opacity: 0.9;
+          font-weight: 400;
+        }
+        
+        .content {
+          padding: 40px;
+        }
+        
+        .greeting {
+          font-size: 18px;
+          color: #4b5563;
+          margin-bottom: 24px;
+          font-weight: 500;
+        }
+        
+        .reminder-text {
+          font-size: 16px;
+          color: #6b7280;
+          margin-bottom: 20px;
+        }
+        
+        .medication-card {
+          background: linear-gradient(135deg, #f0f4ff 0%, #f8faff 100%);
+          border: 1px solid #e0e7ff;
+          border-radius: 12px;
+          padding: 24px;
+          margin: 20px 0;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .medication-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 4px;
+          height: 100%;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .medication-name {
+          font-size: 22px;
+          font-weight: 700;
+          color: #1f2937;
+          margin-bottom: 12px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        
+        .medication-name::before {
+          content: '💊';
+          font-size: 20px;
+        }
+        
+        .medication-detail {
+          display: flex;
+          align-items: center;
+          margin: 8px 0;
+          font-size: 15px;
+          color: #4b5563;
+        }
+        
+        .medication-detail strong {
+          color: #374151;
+          min-width: 80px;
+          font-weight: 600;
+        }
+        
+        .custom-message {
+          background: #fff7ed;
+          border: 1px solid #fed7aa;
+          border-radius: 8px;
+          padding: 16px;
+          margin: 20px 0;
+          font-style: italic;
+          color: #92400e;
+        }
+        
+        .footer {
+          background: #f8fafc;
+          padding: 24px;
+          text-align: center;
+          border-top: 1px solid #e5e7eb;
+        }
+        
+        .footer-text {
+          font-size: 12px;
+          color: #9ca3af;
+          line-height: 1.5;
+        }
+        
+        .urgency-badge {
+          display: inline-block;
+          background: #fee2e2;
+          color: #dc2626;
+          padding: 4px 12px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 600;
+          margin-left: 12px;
+        }
+        
+        @media (max-width: 600px) {
+          .content {
+            padding: 24px;
+          }
+          
+          .header {
+            padding: 24px;
+          }
+          
+          .header h1 {
+            font-size: 24px;
+          }
+          
+          .medication-name {
+            font-size: 20px;
+          }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>💊 Medication Reminder</h1>
+          <p>Time to take your scheduled medication</p>
+        </div>
+        
+        <div class="content">
+          <div class="greeting">
+            Hello ${user.name},
           </div>
-          <p style="color: #999; font-size: 12px; margin-top: 20px;">
-            This is an automated reminder from your Health Management System.
+          
+          <p class="reminder-text">
+            This is a friendly reminder to take your medication as scheduled:
+          </p>
+          
+          <div class="medication-card">
+            <div class="medication-name">
+              ${medication.name}
+              <span class="urgency-badge">NOW</span>
+            </div>
+            
+            <div class="medication-detail">
+              <strong>Dosage:</strong>
+              <span>${medication.dosage}</span>
+            </div>
+            
+            <div class="medication-detail">
+              <strong>Frequency:</strong>
+              <span>${medication.frequency}</span>
+            </div>
+            
+            ${medication.instructions ? `
+            <div class="medication-detail">
+              <strong>Instructions:</strong>
+              <span>${medication.instructions}</span>
+            </div>
+            ` : ''}
+          </div>
+          
+          ${message ? `
+          <div class="custom-message">
+            ${message.replace(/\n/g, '<br/>')}
+          </div>
+          ` : ''}
+          
+          <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">
+            Please take your medication as prescribed and don't hesitate to contact your healthcare provider if you have any questions.
           </p>
         </div>
-      `
-    };
+        
+        <div class="footer">
+          <p class="footer-text">
+            This is an automated reminder from your Health Management System.<br>
+            Please do not reply to this email.
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `
+};
 
     await transporter.sendMail(mailOptions);
     console.log(`✅ Reminder sent to ${user.email} for ${medication.name} at ${new Date().toLocaleTimeString()}`);
