@@ -19,8 +19,9 @@ function Medications() {
   }, []);
 
   const fetchMedications = async () => {
+     const API_URL =" http://localhost:5001"
     try {
-      const response = await axios.get(`http://localhost:5001/api/medications/user/${user.id}`);
+      const response = await axios.get(`${API_URL}/api/medications/user/${user.id}`);
       setMedications(response.data);
     } catch (error) {
       console.error('Error fetching medications:', error);
@@ -28,9 +29,10 @@ function Medications() {
   };
 
   const handleSubmit = async (e) => {
+     const API_URL =" http://localhost:5001"
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5001/api/medications', {
+      await axios.post(`${API_URL}/api/medications`, {
         ...formData,
         userId: user.id
       });
@@ -48,8 +50,9 @@ function Medications() {
   };
 
   const handleDelete = async (id) => {
+     const API_URL =" http://localhost:5001"
     try {
-      await axios.delete(`http://localhost:5001/api/medications/${id}`);
+      await axios.delete(`${API_URL}/api/medications/${id}`);
       fetchMedications();
     } catch (error) {
       console.error('Error deleting medication:', error);

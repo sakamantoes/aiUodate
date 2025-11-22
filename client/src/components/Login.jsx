@@ -18,8 +18,10 @@ function Login() {
     setError('');
     setLoading(true);
 
+    const API_URL =" http://localhost:5001"
+
     try {
-      const response = await axios.post('http://localhost:5001/api/users/login', formData, {
+      const response = await axios.post(`${API_URL}/api/users/login`, formData, {
         timeout: 10000,
       });
       
@@ -139,11 +141,7 @@ function Login() {
           </div>
         </form>
         
-        {/* Debug info - remove in production */}
-        <div className="mt-4 p-3 bg-gray-100 rounded text-xs text-gray-600">
-          <p><strong>Debug Info:</strong></p>
-          <p>Backend URL: http://localhost:5001</p>
-        </div>
+     
       </div>
     </div>
   );
