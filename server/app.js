@@ -19,7 +19,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/medications', medicationRoutes);
 
 // Test route
-app.get('/api/health', (req, res) => {
+app.get('/', (req, res) => {
   res.json({ message: 'Health API is running!' });
 });
 
