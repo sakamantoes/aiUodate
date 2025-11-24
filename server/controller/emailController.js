@@ -293,7 +293,7 @@ export async function sendMedicationReminder(user, medication) {
         
         <div class="footer">
           <p class="footer-text">
-            This is an automated reminder from your Health Management System.<br>
+            This is an automated reminder from your AI persuasive Health Management System.<br>
             Please do not reply to this email.
           </p>
         </div>
