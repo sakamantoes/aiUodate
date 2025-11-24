@@ -19,7 +19,7 @@ function Medications() {
   }, []);
 
   const fetchMedications = async () => {
-    const API_URL = "http://localhost:5000"
+    const API_URL = "https://aiuodate-production-0540.up.railway.app"
     try {
       const response = await axios.get(`${API_URL}/api/medications/user/${user.id}`);
       setMedications(response.data);
@@ -29,7 +29,7 @@ function Medications() {
   };
 
   const handleSubmit = async (e) => {
-    const API_URL = "http://localhost:5000"
+    const API_URL = "https://aiuodate-production-0540.up.railway.app"
     e.preventDefault();
     try {
       await axios.post(`${API_URL}/api/medications`, {
@@ -50,7 +50,7 @@ function Medications() {
   };
 
   const handleDelete = async (id) => {
-    const API_URL = "http://localhost:5000"
+    const API_URL = "https://aiuodate-production-0540.up.railway.app"
     try {
       await axios.delete(`${API_URL}/api/medications/${id}`);
       fetchMedications();
