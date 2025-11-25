@@ -14,6 +14,8 @@ function Medications() {
     reminderTime: '09:00'
   });
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     fetchMedications();
   }, []);
@@ -69,34 +71,101 @@ function Medications() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center">
-              <Link to="/" className="flex items-center">
-                <div className="bg-blue-600 text-white p-2 rounded-lg">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
-                </div>
-                <h1 className="ml-3 text-2xl font-bold text-gray-900">Health Manager</h1>
-              </Link>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link to="/" className="text-blue-600 hover:text-blue-500">
-                Dashboard
-              </Link>
-              <span className="text-gray-700">{user?.name}</span>
-              <button
-                onClick={logout}
-                className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md text-gray-700"
-              >
-                Logout
-              </button>
-            </div>
+    <header className="bg-white shadow">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center py-6">
+          
+          {/* Logo */}
+          <div className="flex items-center">
+            <Link to="/" className="flex items-center">
+              <div className="bg-blue-600 text-white p-2 rounded-lg">
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                  />
+                </svg>
+              </div>
+              <h1 className="ml-3 text-2xl font-bold text-gray-900">
+                Health Manager
+              </h1>
+            </Link>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden text-gray-700"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <svg
+              className="w-7 h-7"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {menuOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </button>
+
+          {/* Desktop Nav */}
+          <div className="hidden lg:flex items-center space-x-4">
+            <Link to="/" className="text-blue-600 hover:text-blue-500">
+              Dashboard
+            </Link>
+            <span className="text-gray-700">{user?.name}</span>
+            <button
+              onClick={logout}
+              className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md text-gray-700"
+            >
+              Logout
+            </button>
           </div>
         </div>
-      </header>
+
+        {/* Mobile Dropdown */}
+        {menuOpen && (
+          <div className="lg:hidden pb-4 space-y-3">
+            <Link
+              to="/"
+              className="block text-blue-600 hover:text-blue-500"
+              onClick={() => setMenuOpen(false)}
+            >
+              Dashboard
+            </Link>
+
+            <span className="block text-gray-700">{user?.name}</span>
+
+            <button
+              onClick={logout}
+              className="w-full bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md text-gray-700"
+            >
+              Logout
+            </button>
+          </div>
+        )}
+      </div>
+    </header>
 
       <main className="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
