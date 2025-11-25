@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import userRoutes from './routes/Users.js'
 import medicationRoutes from './routes/Medication.js'
-import { scheduleEmailJobs } from './controller/emailController.js';
+import { initEmailScheduler } from './controller/emailController.js';
 import sequelize from './models/db.js';
 
 dotenv.config();
@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 sequelize.sync()
   .then(() => {
     console.log('Database synced');
-    scheduleEmailJobs();
+   initEmailScheduler();
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });

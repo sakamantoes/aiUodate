@@ -1,5 +1,4 @@
 import nodemailer from 'nodemailer';
-import cron from 'node-cron';
 import { User, Medication } from '../models/index.js';
 import dotenv from 'dotenv';
 
@@ -337,70 +336,37 @@ export async function testEmailReminders() {
   }
 }
 
-export function scheduleEmailJobs() {
-  console.log('⏰ Starting email scheduler...');
-  
-  // Schedule every 5 minutes - cron format: "*/3 * * * *"
-  cron.schedule('*/5 * * * *', async () => {
+export function initEmailScheduler() {
+  console.log("⏰ Email reminder interval started...");
+
+  setInterval(async () => {
     try {
       const now = new Date();
-      const currentTime = now.toTimeString().slice(0, 5); // HH:MM format
-      const currentHours = now.getHours();
-      const currentMinutes = now.getMinutes();
-      
-      console.log(`🔍 Cron job running at ${currentTime} - Checking for medication reminders...`);
-      
+      const currentTime = now.toTimeString().slice(0, 5);
+
+      console.log(`🔍 Checking medication reminders at ${currentTime}...`);
+
       const medications = await Medication.findAll({
         where: { isActive: true },
-        include: [User]
+        include: [User],
       });
 
-      console.log(`📋 Found ${medications.length} active medications in database`);
+      for (const med of medications) {
+        const [h, m] = med.reminderTime.split(":").map(Number);
 
-      if (medications.length === 0) {
-        console.log('ℹ️ No active medications found in database');
-        return;
-      }
+        const currentTotal = now.getHours() * 60 + now.getMinutes();
+        const reminderTotal = h * 60 + m;
 
-      let remindersSent = 0;
-      
-      for (const medication of medications) {
-        try {
-          // Parse reminder time
-          const [reminderHours, reminderMinutes] = medication.reminderTime.split(':').map(Number);
-          
-          // Calculate time difference in minutes
-          const currentTotalMinutes = currentHours * 60 + currentMinutes;
-          const reminderTotalMinutes = reminderHours * 60 + reminderMinutes;
-          const timeDifference = Math.abs(currentTotalMinutes - reminderTotalMinutes);
-          
-          // Send reminder if within 3 minutes of scheduled time
-          if (timeDifference <= 3) {
-            console.log(`⏰ Time match found: ${medication.reminderTime} for ${medication.name}`);
-            const success = await sendMedicationReminder(medication.User, medication);
-            if (success) remindersSent++;
-          } else {
-            console.log(`⏳ Not time yet: ${medication.reminderTime} (current: ${currentTime}, diff: ${timeDifference}min)`);
-          }
-        } catch (medError) {
-          console.error(`❌ Error processing medication ${medication.name}:`, medError);
+        const diff = Math.abs(currentTotal - reminderTotal);
+
+        if (diff <= 3) {
+          console.log(`⏰ Sending reminder for ${med.name}`);
+          await sendMedicationReminder(med.User, med);
         }
       }
-      
-      console.log(`📬 Cron job completed. Sent ${remindersSent} reminders at ${new Date().toLocaleTimeString()}`);
-      
-    } catch (error) {
-      console.error('❌ Error in email scheduling:', error);
-    }
-  }, {
-    scheduled: true,
-    timezone: "UTC" // You can change this to your local timezone
-  });
 
-  console.log('✅ Email scheduler started - running every 3 minutes');
-  
-  // Test email system on startup
-  setTimeout(() => {
-    testEmailReminders();
-  }, 5000);
+    } catch (error) {
+      console.error("❌ Scheduler error:", error);
+    }
+  }, 5 * 60 * 1000); // 5 minutes
 }
